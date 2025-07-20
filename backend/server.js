@@ -6,15 +6,27 @@ require('dotenv').config();
 
 const app = express();
 const server = http.createServer(app);
+
+// Update CORS configuration
+app.use(cors({
+  origin: process.env.FRONTEND_URL || "*",
+  credentials: true
+}));
+app.use(express.json());
+
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
-    methods: ["GET", "POST"]
-  }
+    origin: process.env.FRONTEND_URL || "*",
+    methods: ["GET", "POST"],
+    credentials: true
+  },
+  transports: ['websocket', 'polling'] // Add this for better compatibility
 });
 
-app.use(cors());
-app.use(express.json());
+// Add a test route
+app.get('/', (req, res) => {
+  res.json({ status: 'Pixel Canvas Backend Running', timestamp: new Date() });
+});
 
 const rooms = new Map();
 const users = new Map();
