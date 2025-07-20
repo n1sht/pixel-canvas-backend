@@ -177,7 +177,7 @@ export default {
     const joinRoom = () => {
       if (!username.value || !roomId.value) return
       
-      socket.value = io('http://localhost:3001')
+      socket.value = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:3001')
       
       socket.value.on('connect', () => {
         connected.value = true
